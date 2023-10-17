@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", (event) => {
 
-    // Déclaration des variables
+    // Déclaration des variables 
     const fontMaxWeight = 1000;
     const fontMinWeight = 200;
     const fontMaxWidth = 125;
@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let modelWeight, modelWidth;
     
     let score = 0;
-    let gameOn = true;
+    let gameOn = false;
     
     let homeContainer = document.getElementsByClassName("home-container")[0];
     let gameContainer = document.getElementsByClassName("game-container")[0];
@@ -27,7 +27,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let timerGauge = document.querySelector('.timer-gauge');
 
 
-    // Function de compte à rebours
+    //////////////////////////////////
+    // Function de compte à rebours //
+    //////////////////////////////////
+    
+    // Fonction compte à rebours
     function updateCountdown (){
         if (timeRemaining > 0){
             timeRemaining = timeRemaining - 0.1;
@@ -47,6 +51,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         model.style.fontVariationSettings = `"wght" ${modelWeight}, "wdth" ${modelWidth}`;
     }
 
+    // Fonction de gestion des "pages"
     function pageGenerator (){
         if (gameOn === false){
             homeContainer.style.display="flex";
@@ -58,38 +63,71 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
     }
 
-    pageGenerator();
-
-    modelGenerator();
     document.getElementById("score").textContent=`SCORE : ${score}`;
 
-    // Récupération de la position de la souris + modification de la font en fonction.
-    document.addEventListener("mousemove", (e) => {
-        let mouseX = e.clientX / window.innerWidth;
-        let mouseY = e.clientY / window.innerHeight;
+    document.addEventListener("mousemove", handleMouseMouvement);
 
-        let fontMouseWeight = fontMinWeight + mouseX * (fontMaxWeight - fontMinWeight);
-        let fontMouseWidth = fontMinWidth + mouseY * (fontMaxWidth - fontMinWidth);
+    ////////// Fonction du jeu entier //////////
+    // Partie 1 : Gestion mouvement de la souris + jeu 
+    function handleMouseMouvement (e){
+        let ratioMouseX = e.clientX / window.innerWidth;
+        let ratioMouseY = e.clientY / window.innerHeight;
 
+        let fontMouseWeight = calculateFontWeight(ratioMouseX); 
+        let fontMouseWidth = calculateFontWidth(ratioMouseY); 
+
+        setFontVariation(fontMouseWeight, fontMouseWidth);
+
+        if (FontMatchVerification(fontMouseWeight, fontMouseWidth)){
+            isFontMatch();
+        }
+
+        else{
+            isNotFontMatch();
+        }
+    }
+
+    // Partie 2  : Calcul des variations des fonts en fonction de la souris
+    function calculateFontWeight(ratioMouseX){
+        return fontMinWeight + ratioMouseX * (fontMaxWeight - fontMinWeight);
+    }
+
+    function calculateFontWidth(ratioMouseY){
+        return fontMinWidth + ratioMouseY * (fontMaxWidth - fontMinWidth);
+    }
+
+    // Partie 3 : application des variations aux font
+    function setFontVariation (fontMouseWeight, fontMouseWidth){
         hamburger.style.fontVariationSettings = `"wght" ${fontMouseWeight}, "wdth" ${fontMouseWidth}`;
+    }
 
-        // Comparaison pour vérifier que les deux font sont identiques avec la tolérance
-        if (Math.abs(modelWeight - fontMouseWeight) < weightTolerance && Math.abs(modelWidth - fontMouseWidth) < widthTolerance){
-            rightFont = true;
-            verifContainer[0].classList.add('verif');
-            console.log(score);
-            score ++;
-            document.getElementById("score").textContent=`SCORE : ${score}`;
-            modelGenerator();
-        }
-        else {
-            rightFont = false;
-            verifContainer[0].classList.remove('verif');
-        }
-    });
+    // Partie 4 : Vérification des deux font pour voir si elle match
+    function FontMatchVerification (fontMouseWeight, fontMouseWidth){
+        return (Math.abs(modelWeight - fontMouseWeight) < weightTolerance && Math.abs(modelWidth - fontMouseWidth) < widthTolerance)
+    }
+
+    // Partie 5 : Evenement de points marqué 
+    function isFontMatch (){
+        rightFont = true;
+        verifContainer.classList.add('verif');
+        console.log(score);
+        score ++;
+        document.getElementById("score").textContent=`SCORE : ${score}`;
+        modelGenerator();
+    }
+
+    // Partie 6 : Evenement pas de match 
+    function isNotFontMatch (){
+        rightFont = false;
+        verifContainer.classList.remove('verif');
+    }
+
+    pageGenerator();
+    modelGenerator();
 
     updateCountdown();
     activeTime = setInterval(updateCountdown, 100);
+
 
   
 });

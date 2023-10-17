@@ -55,8 +55,7 @@ button{
     font-weight: 900;
     padding: 8px;
     background-color: white;
-    border-radius: 4px;
-    
+    border-radius: 4px;   
 }
 
 .score-value{
@@ -68,6 +67,13 @@ button{
 }
 
 .mouse-controler-container{
+    width: 70vw;
+    height: 11em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.demo-controler-container{
     width: 70vw;
     height: 11em;
     display: flex;
