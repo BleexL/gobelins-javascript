@@ -7,13 +7,13 @@
     </head>
     <body>
      
-        <!-- Page d'accueil -->
+        <!-- Home page -->
         <div class="home-container">
             <div class="demo-controler-container">
                 <p class="font-mouse" id="demoHamburger">Right Font</p>
                 <p class="font-model" id="demoModel">Right Font</p>
             </div>
-            <button>Démarrer</button>
+            <button class="cta cta-primary start-button" id="start">Démarrer</button>
         </div>
         
         <!-- Game Page -->
@@ -36,8 +36,21 @@
                 <div class="timer-gauge"></div>
             </div>    
             
-            
-            <script src="js/game.js"></script>
         </div>
+
+        <!-- Pop-up end-game -->
+        <div class="pop-up-container">
+            <div class="data-container">
+                <span class="score-endgame" id="score">45</span>
+                <span class="record-endgame" id="record">Record 50</span>
+            </div>
+
+            <div class="action-container">
+                <button class="cta cta-primary">Recommencer</button>
+                <button class="cta cta-secondary">Menu principal</button>
+            </div>
+        </div>
+
+        <script src="js/game.js"></script>
     </body>
 </html>

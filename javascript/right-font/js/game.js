@@ -12,14 +12,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let modelWeight, modelWidth;
     
     let score = 0;
-    let gameOn = false;
+    let record = 0;
+    let homeSection = true;
+    let gameOn = true;
+    let endgame = false;
     
     let homeContainer = document.getElementsByClassName("home-container")[0];
     let gameContainer = document.getElementsByClassName("game-container")[0];
+    let endgamePopUp = document.getElementsByClassName("pop-up-container")[0];
     
     let hamburger = document.getElementById("hamburger");
     let model = document.getElementById("model");
+    let demoHamburger = document.getElementById("demoHamburger");
+
+    let fontTarget = demoHamburger
+
     const verifContainer = document.getElementsByClassName("mouse-controler-container")[0];
+    const startButton = document.getElementById("start");
 
     let countdown = 60;
     let timeRemaining = countdown;
@@ -27,9 +36,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let timerGauge = document.querySelector('.timer-gauge');
 
 
-    //////////////////////////////////
-    // Function de compte à rebours //
-    //////////////////////////////////
+    ///////////////
+    // Fonctions //
+    ///////////////
     
     // Fonction compte à rebours
     function updateCountdown (){
@@ -39,6 +48,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
             gaugeRemaining = timeRemaining*100/60;
             timerGauge.style.width = gaugeRemaining + '%';
+        }
+        else {
+            gameOn = false;
         }
     };
 
@@ -53,7 +65,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     // Fonction de gestion des "pages"
     function pageGenerator (){
-        if (gameOn === false){
+        if (homeSection === true){
             homeContainer.style.display="flex";
             gameContainer.style.display="none";
         }
@@ -61,44 +73,45 @@ document.addEventListener("DOMContentLoaded", (event) => {
             homeContainer.style.display="none";
             gameContainer.style.display="block";
         }
+
+        if (endgame === false){
+            endgamePopUp.style.display="none";
+        }
+        else{
+            endgamePopUp.style.display="flex";
+        }
     }
-
-    document.getElementById("score").textContent=`SCORE : ${score}`;
-
-    document.addEventListener("mousemove", handleMouseMouvement);
 
     ////////// Fonction du jeu entier //////////
     // Partie 1 : Gestion mouvement de la souris + jeu 
-    function handleMouseMouvement (e){
+    function handleMouseMouvement (e, fontTarget){
         let ratioMouseX = e.clientX / window.innerWidth;
         let ratioMouseY = e.clientY / window.innerHeight;
 
-        let fontMouseWeight = calculateFontWeight(ratioMouseX); 
-        let fontMouseWidth = calculateFontWidth(ratioMouseY); 
+        let fontMouseWeight = calculateFontTransformation(ratioMouseX, fontMinWeight, fontMaxWeight); 
+        let fontMouseWidth = calculateFontTransformation(ratioMouseY, fontMinWidth, fontMaxWidth); 
 
-        setFontVariation(fontMouseWeight, fontMouseWidth);
-
-        if (FontMatchVerification(fontMouseWeight, fontMouseWidth)){
-            isFontMatch();
+        if (gameOn === true){
+            setFontVariation(fontMouseWeight, fontMouseWidth, fontTarget);
+            if (FontMatchVerification(fontMouseWeight, fontMouseWidth)){
+                isFontMatch();
+            }
+    
+            else{
+                isNotFontMatch();
+            }
         }
-
-        else{
-            isNotFontMatch();
-        }
+        
     }
 
     // Partie 2  : Calcul des variations des fonts en fonction de la souris
-    function calculateFontWeight(ratioMouseX){
-        return fontMinWeight + ratioMouseX * (fontMaxWeight - fontMinWeight);
-    }
-
-    function calculateFontWidth(ratioMouseY){
-        return fontMinWidth + ratioMouseY * (fontMaxWidth - fontMinWidth);
+    function calculateFontTransformation(ratioMouse, fontMinProperty, fontMaxProperty){
+        return fontMinProperty + ratioMouse * (fontMaxProperty - fontMinWidth)
     }
 
     // Partie 3 : application des variations aux font
-    function setFontVariation (fontMouseWeight, fontMouseWidth){
-        hamburger.style.fontVariationSettings = `"wght" ${fontMouseWeight}, "wdth" ${fontMouseWidth}`;
+    function setFontVariation (fontMouseWeight, fontMouseWidth, fontTarget){
+        fontTarget.style.fontVariationSettings = `"wght" ${fontMouseWeight}, "wdth" ${fontMouseWidth}`;
     }
 
     // Partie 4 : Vérification des deux font pour voir si elle match
@@ -122,12 +135,29 @@ document.addEventListener("DOMContentLoaded", (event) => {
         verifContainer.classList.remove('verif');
     }
 
+    // Fonction de record
+    function recordVerification (){
+        if (score > record) {
+            record = score;
+        }
+    }
+
     pageGenerator();
     modelGenerator();
 
+    startButton.addEventListener("click", function(){
+        homeSection = false;
+        pageGenerator();
+        fontTarget = hamburger;
+    });
+
+    document.getElementById("score").textContent=`SCORE : ${score}`;
+    document.addEventListener("mousemove", function (e) {
+        handleMouseMouvement(e, fontTarget);
+    });
+
     updateCountdown();
     activeTime = setInterval(updateCountdown, 100);
-
 
   
 });
