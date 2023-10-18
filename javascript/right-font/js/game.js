@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let score = 0;
     let record = 0;
     // let homeSection = true;
-    let gameOn = true;
+    let mouseControl = true;
     // let endgame = true;
     
     let gameState = {
@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     let hamburger = document.getElementById("hamburger");
     let model = document.getElementById("model");
     let demoHamburger = document.getElementById("demoHamburger");
+    let background = document.getElementById("background");
 
     let fontTarget = demoHamburger;
 
@@ -41,20 +42,52 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const homePageButton = document.getElementById("home-page");
     const wordList = ["Hamburger", "Bonjour", "Soleil", "Chocolat", "Danse", "Amour", "Écouter", "Musique", "Bonheur", "Voyage", "Papillon"]
 
-    let countdown = 5;
+    let countdown = 60;
     let timeRemaining = countdown;
     let gaugeRemaining = 100;
     let timerGauge = document.querySelector('.timer-gauge');
+
+    const colorTheme = [
+    {
+        name: "blue",
+        darkerColor: "#0C4A6E",
+        primaryColor: "#7DD3FC",
+        lighterColor: "#E0F2FE",
+    },
+    {
+        name: "purple",
+        darkerColor: "#581C87",
+        primaryColor: "#C084FC",
+        lighterColor: "#F3E8FF",
+    },
+    {
+        name: "green",
+        darkerColor: "#14532D",
+        primaryColor: "#86EFAC",
+        lighterColor: "#DCFCE7",
+    },
+    {
+        name: "orange",
+        darkerColor: "#7C2D12",
+        primaryColor: "#FDBA74",
+        lighterColor: "#FFEDD5",
+    },
+    {
+        name: "yellow",
+        darkerColor: "#713F12",
+        primaryColor: "#FDE047",
+        lighterColor: "#FEF9C3",
+    }]
 
 
     ///////////////
     // Fonctions //
     ///////////////
-    
+
     // Fonction compte à rebours
     function updateCountdown (){
         if (timeRemaining <= 0){
-            gameOn = false;
+            mouseControl = false;
             currentGameState = gameState.endGame;
 
             handleGameState();
@@ -62,22 +95,43 @@ document.addEventListener("DOMContentLoaded", (event) => {
         else {
             activeTime = setTimeout(updateCountdown, 100)
             timeRemaining = timeRemaining - 0.1;
-            gaugeRemaining = timeRemaining*100/60;
+            gaugeRemaining = timeRemaining*100/countdown;
             timerGauge.style.width = gaugeRemaining + '%';
         }
     };
 
     // Fonction de génération de la font model (width et weight aléatoire)
+    let previousIndexWord = -1;
     function modelGenerator (){
         modelWeight = Math.floor(Math.random() * (fontMaxWeight - fontMinWeight + 1)) + fontMinWeight;
         modelWidth = Math.floor(Math.random() * (fontMaxWidth - fontMinWidth + 1)) + fontMinWidth;
 
-        let wordSelection = wordList[Math.floor(Math.random()* wordList.length)];
+        let newRandomIndexWord = wordList[Math.floor(Math.random()* wordList.length)];
+
+        while (newRandomIndexWord === previousIndexWord){
+            newRandomIndexWord = wordList[Math.floor(Math.random()* wordList.length)];
+        }
 
         console.log(model);
         model.style.fontVariationSettings = `"wght" ${modelWeight}, "wdth" ${modelWidth}`;
-        model.textContent = wordSelection;
-        hamburger.textContent = wordSelection;
+        model.textContent = newRandomIndexWord;
+        hamburger.textContent = newRandomIndexWord;
+    }
+
+    let previousIndexTheme = -1;
+    function ThemeSelector (){
+        let newRandomIndexTheme = Math.floor(Math.random() * colorTheme.length);
+
+        while (newRandomIndexTheme === previousIndexTheme){
+            newRandomIndexTheme = Math.floor(Math.random() * colorTheme.length);
+        }
+
+        background.style.backgroundColor = colorTheme[newRandomIndexTheme].lighterColor;
+        model.style.color = colorTheme[newRandomIndexTheme].primaryColor;
+        hamburger.style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        timerGauge.style.backgroundColor = colorTheme[newRandomIndexTheme].primaryColor;
+
+        previousIndexTheme=newRandomIndexTheme;
     }
 
     // Fonction de gestion des "pages"
@@ -113,16 +167,21 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
     }
 
+    function gameInit (){
+        mouseControl = true;
+        timeRemaining = countdown;
+        score = 0;
+    }
+
     ////////// Fonction du jeu entier //////////
     // Partie 1 : Gestion mouvement de la souris + jeu 
     function handleMouseMouvement (e, fontTarget){
         let ratioMouseX = e.clientX / window.innerWidth;
         let ratioMouseY = e.clientY / window.innerHeight;
-
         let fontMouseWeight = calculateFontTransformation(ratioMouseX, fontMinWeight, fontMaxWeight); 
         let fontMouseWidth = calculateFontTransformation(ratioMouseY, fontMinWidth, fontMaxWidth); 
 
-        if (gameOn === true){
+        if (mouseControl === true){
             setFontVariation(fontMouseWeight, fontMouseWidth, fontTarget);
             if (FontMatchVerification(fontMouseWeight, fontMouseWidth)){
                 isFontMatch();
@@ -145,6 +204,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     // Partie 3 : application des variations aux font
     function setFontVariation (fontMouseWeight, fontMouseWidth, fontTarget){
         fontTarget.style.fontVariationSettings = `"wght" ${fontMouseWeight}, "wdth" ${fontMouseWidth}`;
+        console.log(fontTarget, fontMouseWeight, fontMouseWidth);
     }
 
     // Partie 4 : Vérification des deux font pour voir si elle match
@@ -160,6 +220,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         score ++;
         document.getElementById("score").textContent=`SCORE : ${score}`;
         modelGenerator();
+        ThemeSelector();
     }
 
     // Partie 6 : Evenement pas de match 
@@ -181,28 +242,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
             case gameState.home:
 
                 // Instructions de la page home
+                mouseControl = true;
                 pageGenerator();
-                gameOn = true;
-
-                document.addEventListener("mousemove", function (e) {
-                    handleMouseMouvement(e, fontTarget);
-                });
 
                 break;
             
             case gameState.game:
 
                 // Instructions de la page jeu
+                gameInit();
                 pageGenerator();
                 modelGenerator();
                 updateCountdown();
-            
+                ThemeSelector();
                 
 
                 document.getElementById("score").textContent = `SCORE : ${score}`;
-                document.addEventListener("mousemove", function (e) {
-                    handleMouseMouvement(e, fontTarget);
-                });
 
 
 
@@ -216,52 +271,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 pageGenerator();
 
                 document.getElementById("previous-score").textContent = `SCORE : ${score}`;
-                document.getElementById("score").textContent = `RECORD : ${record}`;
-
-                break;
-        }
-    }
-    function handleGameState (){
-        switch (currentGameState){
-            case gameState.home:
-
-                // Instructions de la page home
-                pageGenerator();
-
-                document.addEventListener("mousemove", function (e) {
-                    handleMouseMouvement(e, fontTarget);
-                });
-
-                break;
-            
-            case gameState.game:
-
-                // Instructions de la page jeu
-                pageGenerator();
-                modelGenerator();
-                updateCountdown();
-            
-                
-
-                document.getElementById("score").textContent = `SCORE : ${score}`;
-                document.addEventListener("mousemove", function (e) {
-                    handleMouseMouvement(e, fontTarget);
-                });
-
-
-
-                break;
-            
-            case gameState.endGame:
-
-                // Instructions de la pop up endgame
-
-                recordVerification();
-                pageGenerator();
-                clearInterval();
-
-                document.getElementById("previous-score").textContent = `SCORE : ${score}`;
-                document.getElementById("score").textContent = `RECORD : ${record}`;
+                document.getElementById("record").textContent = `RECORD : ${record}`;
 
                 break;
         }
@@ -274,21 +284,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
     });
 
     restartButton.addEventListener("click", function () {
+        console.log("tu as cliqué sur le restart")
         currentGameState = gameState.game;
         fontTarget = hamburger;
         handleGameState();
-        timeRemaining = countdown
-        console.log("tu as cliqué sur le restart")
     });
 
     homePageButton.addEventListener("click", function () {
         currentGameState = gameState.home;
         fontTarget = demoHamburger;
         handleGameState();
-        console.log("lala");
-        console.log(fontTarget);
     });
-        
+    
+    document.addEventListener("mousemove", function (e) {
+        handleMouseMouvement(e, fontTarget);
+    });
+
     // Appel initial de handleGameState
     handleGameState();
 });  // Fermeture de la fonction globale
