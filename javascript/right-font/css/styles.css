@@ -42,7 +42,7 @@ body{
 
 .cta-primary{
     background: #333;
-    color: #F2F2F2;
+    color: #FFF;
 }
 
 .cta-secondary{
@@ -52,7 +52,7 @@ body{
 
 .start-button{
     position: absolute;
-    bottom: 160px;
+    bottom: 120px;
 }
 
 
@@ -73,9 +73,48 @@ body{
     margin: 0;
 }
 
-.verif{
-    background-color: green;
+/* #scoring-indicator-container{
+    display: flex;
+    width: 240px;
+    height: 240px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} */
+
+#scoring-indicator{
+    color: #0C4A6E;
+    text-align: center;
+    font-size: 10px;
+    font-weight: 1000;
+
+    width: 240px;
+    height: 240px;
+
+    position: absolute;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: 100%;
 }
+
+.scoring-animation{
+    font-size: 148px !important; 
+
+    top: 10vh !important;
+    left: 50vw !important;
+
+    opacity: 1;
+
+    transition: all 500ms;
+}
+
 
 .mouse-controler-container{
     width: 70vw;
@@ -90,6 +129,10 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.game-description{
+    font-size: 20px;
 }
 
 .font-mouse{
@@ -123,7 +166,7 @@ body{
 
 .pop-up-container{
     display: flex;
-    padding: 40px 0px 16px 0px;
+    padding-top: 56px;
     flex-direction: column;
     align-items: center;
     gap: 48px;
@@ -131,7 +174,22 @@ body{
     border-radius: 24px;
     background: #FFF;
     position: absolute;
-    width: 640px;
+    bottom: 20vh;
+    width: 50%;
+    max-width: 640px;
+    opacity: 1;
+
+    overflow: hidden;
+    /* transform: translateY(-50%); */
+    transition: all 500ms;
+
+}
+
+.pop-up-animation{
+    opacity: 1;
+    bottom: 50vh;
+    transform: translateY(50%);
+
 }
 
 .data-container{
@@ -143,7 +201,7 @@ body{
 .score-endgame{
     color: #000;
     text-align: center;
-    font-size: 112px;
+    font-size: 72px;
     font-style: normal;
     font-weight: 900;
     line-height: normal;
@@ -162,15 +220,18 @@ body{
 
 .action-container{
     display: flex;
-    padding: 0px 40px;
+    padding: 40px;
     justify-content: center;
-    align-items: flex-start;
-    flex-direction: column;
+    align-items: center;
+    align-content: center;
     gap: 16px;
-    width: 100%;
-    box-sizing: border-box;
+    align-self: stretch;
+    flex-wrap: wrap;
+    background-color: #333;
 }
 
 .action-container .cta{
-    width: 100%;
+    flex: 1;
+    min-width: 200px;
+    padding: 0px;
 }

@@ -8,14 +8,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const widthTolerance = 10;
     const weightTolerance = 20;
 
-    let rightFont = false;
     let modelWeight, modelWidth;
     
     let score = 0;
     let record = 0;
-    // let homeSection = true;
+
     let mouseControl = true;
-    // let endgame = true;
     
     let gameState = {
         home : "home",
@@ -25,27 +23,53 @@ document.addEventListener("DOMContentLoaded", (event) => {
     };
     let currentGameState = gameState.home;
 
-    let homeContainer = document.getElementsByClassName("home-container")[0];
-    let gameContainer = document.getElementsByClassName("game-container")[0];
-    let endgamePopUp = document.getElementsByClassName("pop-up-container")[0];
+    const homeContainer = document.getElementsByClassName("home-container")[0];
+    const gameContainer = document.getElementsByClassName("game-container")[0];
+    const endgamePopUp = document.getElementsByClassName("pop-up-container")[0];
     
-    let hamburger = document.getElementById("hamburger");
-    let model = document.getElementById("model");
-    let demoHamburger = document.getElementById("demoHamburger");
-    let background = document.getElementById("background");
+    const hamburger = document.getElementById("hamburger");
+    const model = document.getElementById("model");
+    const demoModel = document.getElementById("demoModel");
+    const demoHamburger = document.getElementById("demoHamburger");
+    const background = document.getElementById("background");
 
-    let fontTarget = demoHamburger;
-
-    const verifContainer = document.getElementsByClassName("mouse-controler-container")[0];
-    const startButton = document.getElementById("start");
-    const restartButton = document.getElementById("restart");
-    const homePageButton = document.getElementById("home-page");
-    const wordList = ["Hamburger", "Bonjour", "Soleil", "Chocolat", "Danse", "Amour", "Écouter", "Musique", "Bonheur", "Voyage", "Papillon"]
+    const gameDescription = document.getElementsByClassName("game-description")[0];
 
     let countdown = 60;
     let timeRemaining = countdown;
     let gaugeRemaining = 100;
     let timerGauge = document.querySelector('.timer-gauge');
+
+    const scoreContainer = document.getElementsByClassName("score-container")[0];
+    const scoringIndicator = document.getElementById("scoring-indicator");
+
+    let fontTarget = demoHamburger;
+    let modelTarget = demoModel;
+
+    const startButton = document.getElementById("start");
+    const restartButton = document.getElementById("restart");
+    const homePageButton = document.getElementById("home-page");
+    const wordList = [
+        "Hamburger", "Bonjour", "Chocolat", "Danse", "Amour", "Écouter", "Musique", "Bonheur", "Voyage", "Papillon",
+        "Fenêtre", "Cuisine", "Ordinateur", "Écran", "Château", "Guitare", "Bibliothèque", "Montagne", "Piano",
+        "Tableau", "Téléphone", "Plage", "Restaurant", "Télévision", "Football", "Jardin", "Bateau",
+        "Université", "Sourire", "Livre", "Fleur", "Étoile", "Arbre", "École", "Tortue",
+        "Horloge", "Voiture", "Maison", "Forêt", "Porte", "Souris", "Feuille", "Dessin",
+        "Chocolat", "Papier", "Maison", "Montre", "Chanson", "Voyage", "Plante", "Tigre",
+        "Cahier", "Courir", "Voler", "Vendre", "Acheter", "Écrire", "Nager", "Manger", "Aimer",
+        "Danseur", "Chanteur", "Peindre", "Étudier", "Regarder", "Dormir", "Chaussure", "Lunettes", "Robe", "Chapeau", "Bougie", "Crayon", "Piano", "Globe", "Tapis", "Coussin", "Couverture",
+        "Chaise", "Cuillère", "Fourchette", "Assiette", "Verre", "Bouteille", "Gâteau", "Télécommande", "Microphone",
+        "Téléphone", "Internet", "Radio", "École", "Université", "Cinéma", "Théâtre", "Musée", "Hôtel",
+        "Avion", "Bateau", "Voiture", "Bicyclette", "Taxi", "Marche", "Course", "Natation", "Plongée",
+        "Saut", "Cinéma", "Musée", "Jardin",
+        "Fête", "Festival", "Concert", "Spectacle", "Opéra", "Cinéma", "Bibliothèque", "École", "Collège", "Lycée", "Université", "Classe", "Professeur",
+        "Élève", "Cahier", "Crayon", "Stylo", "Tableau", "Chaise", "Bureau", "Cartable", "Calculatrice", "Physique", "Chimie", "Biologie", "Histoire", "Géographie", "Musique", "Sport", "Anglais", "Français",
+        "Espagnol", "Allemand", "Italien", "Japonais", "Chinois", "Arabe", "Russe", "Politique", "Économie", "Science",
+        "Informatique", "Télévision", "Internet", "Téléphone", "Radio", "Cinéma", "Musée", "Photographie", "Spectacle", "Concert", "Opéra", "Ballet", "Chanson", "Musique",
+        "Rock", "Classique", "Blues", "Reggae", "Country", "Disco", "Latino",
+        "Rapide", "Triste", "Colère", "Couleur", "Forme", "Taille", "Poids", "Distance", "Temps", "Semaine", "Année", "Aujourd'hui", "Demain",
+        "Matin", "Après-midi", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche", "Janvier", "Février", "Mars", "Avril", "Mai"
+    ];
 
     const colorTheme = [
     {
@@ -87,16 +111,26 @@ document.addEventListener("DOMContentLoaded", (event) => {
     // Fonction compte à rebours
     function updateCountdown (){
         if (timeRemaining <= 0){
-            mouseControl = false;
-            currentGameState = gameState.endGame;
-
-            handleGameState();
+            if (currentGameState === gameState.starting){
+                currentGameState = gameState.game;
+                handleGameState();
+            }
+            else if (currentGameState === gameState.game){
+                mouseControl = false;
+                currentGameState = gameState.endGame;
+    
+                handleGameState();
+            }
         }
         else {
             activeTime = setTimeout(updateCountdown, 100)
             timeRemaining = timeRemaining - 0.1;
             gaugeRemaining = timeRemaining*100/countdown;
             timerGauge.style.width = gaugeRemaining + '%';
+            if (currentGameState === gameState.starting){
+                model.textContent = Math.floor(timeRemaining) + 1;
+                fontTarget.textContent = Math.floor(timeRemaining) + 1;
+            }
         }
     };
 
@@ -113,7 +147,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
 
         console.log(model);
-        model.style.fontVariationSettings = `"wght" ${modelWeight}, "wdth" ${modelWidth}`;
+        modelTarget.style.fontVariationSettings = `"wght" ${modelWeight}, "wdth" ${modelWidth}`;
         model.textContent = newRandomIndexWord;
         hamburger.textContent = newRandomIndexWord;
     }
@@ -127,9 +161,29 @@ document.addEventListener("DOMContentLoaded", (event) => {
         }
 
         background.style.backgroundColor = colorTheme[newRandomIndexTheme].lighterColor;
-        model.style.color = colorTheme[newRandomIndexTheme].primaryColor;
-        hamburger.style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        modelTarget.style.color = colorTheme[newRandomIndexTheme].primaryColor;
+        fontTarget.style.color = colorTheme[newRandomIndexTheme].darkerColor;
         timerGauge.style.backgroundColor = colorTheme[newRandomIndexTheme].primaryColor;
+
+        gameDescription.style.color = colorTheme[newRandomIndexTheme].darkerColor;
+
+        startButton.style.backgroundColor = colorTheme[newRandomIndexTheme].primaryColor;
+        startButton.style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        
+        restartButton.style.backgroundColor = 'white';
+        restartButton.style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        endgamePopUp.getElementsByClassName("action-container")[0].style.backgroundColor = colorTheme[newRandomIndexTheme].darkerColor;
+        homePageButton.style.backgroundColor = colorTheme[newRandomIndexTheme].primaryColor;
+        homePageButton.style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        
+        
+        document.getElementById("previous-score").style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        document.getElementById("record").style.color = colorTheme[newRandomIndexTheme].primaryColor;
+        
+        document.getElementById("score").style.color = colorTheme[newRandomIndexTheme].primaryColor;
+        scoreContainer.style.backgroundColor = colorTheme[newRandomIndexTheme].darkerColor;
+
+        scoringIndicator.style.color = colorTheme[newRandomIndexTheme].darkerColor;
 
         previousIndexTheme=newRandomIndexTheme;
     }
@@ -145,32 +199,58 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 gameContainer.style.display="none";
                 endgamePopUp.style.display="none"
 
-                console.log("currentGameState = " + currentGameState)
+                console.log("currentGameState = " + currentGameState);
+
+                break;
+
+            case gameState.starting:
+
+                gameContainer.style.display="block";
+                
+                homeContainer.style.display="none";
+                endgamePopUp.style.display="none"
+                scoreContainer.style.display="none"
+                
+                console.log("currentGameState = " + currentGameState);
                 break;
                 
             case gameState.game:
 
                 // Affichage de la page home
                 gameContainer.style.display="block";
+                scoreContainer.style.display="block"
                 
                 homeContainer.style.display="none";
                 endgamePopUp.style.display="none"
-                console.log("currentGameState = " + currentGameState)
+                console.log("currentGameState = " + currentGameState);
                 break;
 
             case gameState.endGame:
 
                 // Affichage de la page home
-                endgamePopUp.style.display="flex"
-                console.log("currentGameState = " + currentGameState)
+                endgamePopUp.style.display="flex";
+                console.log("currentGameState = " + currentGameState);
                 break;
         }
     }
 
+    function startingInit (){
+        mouseControl = true;
+        countdown = 3;
+        timeRemaining = countdown;
+    }
+
     function gameInit (){
         mouseControl = true;
+        countdown = 60;
         timeRemaining = countdown;
         score = 0;
+
+        //Récupération du cord en local storage
+        var recordStocked = localStorage.getItem('myRecord');
+        if (recordStocked !== null){
+            record = parseInt(recordStocked, 10);
+        }
     }
 
     ////////// Fonction du jeu entier //////////
@@ -198,13 +278,13 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     // Partie 2  : Calcul des variations des fonts en fonction de la souris
     function calculateFontTransformation(ratioMouse, fontMinProperty, fontMaxProperty){
-        return fontMinProperty + ratioMouse * (fontMaxProperty - fontMinWidth)
+        return fontMinProperty + ratioMouse * (fontMaxProperty - fontMinWidth);
     }
 
     // Partie 3 : application des variations aux font
     function setFontVariation (fontMouseWeight, fontMouseWidth, fontTarget){
         fontTarget.style.fontVariationSettings = `"wght" ${fontMouseWeight}, "wdth" ${fontMouseWidth}`;
-        console.log(fontTarget, fontMouseWeight, fontMouseWidth);
+        // console.log(fontTarget, fontMouseWeight, fontMouseWidth);
     }
 
     // Partie 4 : Vérification des deux font pour voir si elle match
@@ -214,26 +294,58 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     // Partie 5 : Evenement de points marqué 
     function isFontMatch (){
-        rightFont = true;
-        verifContainer.classList.add('verif');
-        console.log(score);
-        score ++;
-        document.getElementById("score").textContent=`SCORE : ${score}`;
-        modelGenerator();
-        ThemeSelector();
+        if (currentGameState === gameState.game){
+            score ++;
+            document.getElementById("score").textContent=`SCORE : ${score}`;
+            modelGenerator();
+            ThemeSelector();
+
+            showScoringIndicator();
+
+            console.log("it's a match en game")
+        }
+        if (currentGameState == gameState.home){
+            modelGenerator();
+            ThemeSelector();
+            console.log("it's a match en home")
+        }
     }
 
     // Partie 6 : Evenement pas de match 
     function isNotFontMatch (){
-        rightFont = false;
-        verifContainer.classList.remove('verif');
+
     }
 
     // Fonction de record
     function recordVerification (){
         if (score > record) {
             record = score;
+            localStorage.setItem('myRecord', record);
         }
+    }
+
+    function showScoringIndicator() {
+        scoringIndicator.style.opacity = 0;
+        console.log("opacity avant", scoringIndicator.style.opacity)
+        scoringIndicator.textContent = '+1';
+        scoringIndicator.classList.add('scoring-animation');
+    
+        setTimeout(function () {
+            scoringIndicator.classList.remove('scoring-animation');
+            scoringIndicator.style.opacity = 1;
+            scoringIndicator.textContent = '';
+            console.log("opacity après", scoringIndicator.style.opacity)
+        }, 500);
+    }
+
+    function showPopUpEndgame(){
+        endgamePopUp.style.opacity = 1;
+        endgamePopUp.classList.add('pop-up-animation');
+    }
+
+    function hidePopUpEndgame(){
+        endgamePopUp.classList.remove('pop-up-animation');
+        endgamePopUp.style.opacity = 0;
     }
     
     // Fonction de gestion de l'état du jeu
@@ -243,14 +355,31 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
                 // Instructions de la page home
                 mouseControl = true;
+                ThemeSelector();
+                hidePopUpEndgame();
+                modelGenerator();
                 pageGenerator();
 
                 break;
+
+            case gameState.starting:
+
+                startingInit();
+                hidePopUpEndgame();
+                pageGenerator();
+                modelGenerator();
+                updateCountdown();
+                ThemeSelector();
+
+                break;
+
+
             
             case gameState.game:
 
                 // Instructions de la page jeu
                 gameInit();
+                hidePopUpEndgame();
                 pageGenerator();
                 modelGenerator();
                 updateCountdown();
@@ -268,6 +397,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 // Instructions de la pop up endgame
 
                 recordVerification();
+                showPopUpEndgame();
                 pageGenerator();
 
                 document.getElementById("previous-score").textContent = `SCORE : ${score}`;
@@ -278,21 +408,23 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
 
     startButton.addEventListener("click", function () {
-        currentGameState = gameState.game;
+        currentGameState = gameState.starting;
         fontTarget = hamburger;
+        modelTarget = model;
         handleGameState();
     });
-
+    
     restartButton.addEventListener("click", function () {
-        console.log("tu as cliqué sur le restart")
-        currentGameState = gameState.game;
+        currentGameState = gameState.starting;
         fontTarget = hamburger;
+        modelTarget = model;
         handleGameState();
     });
 
     homePageButton.addEventListener("click", function () {
         currentGameState = gameState.home;
         fontTarget = demoHamburger;
+        modelTarget = demoModel;
         handleGameState();
     });
     
@@ -300,6 +432,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         handleMouseMouvement(e, fontTarget);
     });
 
+    console.log(mouseControl)
     // Appel initial de handleGameState
     handleGameState();
-});  // Fermeture de la fonction globale
+});  
