@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const scoreContainer = document.getElementsByClassName("score-container")[0];
     const scoringIndicator = document.getElementById("scoring-indicator");
 
+    const faviconTarget = document.getElementById("favicon");
+    let faviconSelection = 0;
+
     let fontTarget = demoHamburger;
     let modelTarget = demoModel;
 
@@ -75,30 +78,35 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const colorTheme = [
     {
         name: "blue",
+        faviconLink: "assets/favicon-blue.png",
         darkerColor: "#0C4A6E",
         primaryColor: "#7DD3FC",
         lighterColor: "#E0F2FE",
     },
     {
         name: "purple",
+        faviconLink: "assets/favicon-purple.png",
         darkerColor: "#581C87",
         primaryColor: "#C084FC",
         lighterColor: "#F3E8FF",
     },
     {
         name: "green",
+        faviconLink: "assets/favicon-green.png",
         darkerColor: "#14532D",
         primaryColor: "#86EFAC",
         lighterColor: "#DCFCE7",
     },
     {
         name: "orange",
+        faviconLink: "assets/favicon-orange.png",
         darkerColor: "#7C2D12",
         primaryColor: "#FDBA74",
         lighterColor: "#FFEDD5",
     },
     {
         name: "yellow",
+        faviconLink: "assets/favicon-tutu.png",
         darkerColor: "#713F12",
         primaryColor: "#FDE047",
         lighterColor: "#FEF9C3",
@@ -186,8 +194,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
         scoringIndicator.style.color = colorTheme[newRandomIndexTheme].darkerColor;
 
+        faviconTarget.href = colorTheme[newRandomIndexTheme].faviconLink;
+        
+
         previousIndexTheme=newRandomIndexTheme;
     }
+
+    /*function changeFavicon (){
+        switch (faviconSelection){
+            // Theme blue
+            case colorTheme[0]:
+                faviconTarget.href="assets/favicon-blue.png";
+                break;
+            // Theme purple
+            case colorTheme[1]:
+                faviconTarget.href="assets/favicon-purple.png";
+                break;
+            // Theme green
+            case colorTheme[2]:
+                faviconTarget.href="assets/favicon-green.png";
+                break;
+
+            // Theme orange
+            case colorTheme[3]:
+                faviconTarget.href="assets/favicon-orange.png";
+                break;
+
+            // Theme yellow
+            case colorTheme[4]:
+                faviconTarget.href="assets/favicon-yellow.png";
+                break;
+        }
+    }*/
+
+
 
     // Fonction de gestion des "pages"
     function pageGenerator (){
