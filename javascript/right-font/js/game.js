@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     const demoModel = document.getElementById("demoModel");
     const demoHamburger = document.getElementById("demoHamburger");
     const background = document.getElementById("background");
+    const credit = document.getElementById("credit");
 
     const gameDescription = document.getElementsByClassName("game-description")[0];
 
@@ -155,7 +156,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             newRandomIndexWord = wordList[Math.floor(Math.random()* wordList.length)];
         }
 
-        console.log(model);
+        // console.log(model);
         modelTarget.style.fontVariationSettings = `"wght" ${modelWeight}, "wdth" ${modelWidth}`;
         model.textContent = newRandomIndexWord;
         hamburger.textContent = newRandomIndexWord;
@@ -175,6 +176,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         timerGauge.style.backgroundColor = colorTheme[newRandomIndexTheme].primaryColor;
 
         gameDescription.style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        credit.style.color = colorTheme[newRandomIndexTheme].darkerColor;
 
         startButton.style.backgroundColor = colorTheme[newRandomIndexTheme].primaryColor;
         startButton.style.color = colorTheme[newRandomIndexTheme].darkerColor;
@@ -240,7 +242,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 gameContainer.style.display="none";
                 endgamePopUp.style.display="none"
 
-                console.log("currentGameState = " + currentGameState);
+                // console.log("currentGameState = " + currentGameState);
 
                 break;
 
@@ -252,7 +254,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 endgamePopUp.style.display="none"
                 scoreContainer.style.display="none"
                 
-                console.log("currentGameState = " + currentGameState);
+                // console.log("currentGameState = " + currentGameState);
                 break;
                 
             case gameState.game:
@@ -263,14 +265,14 @@ document.addEventListener("DOMContentLoaded", (event) => {
                 
                 homeContainer.style.display="none";
                 endgamePopUp.style.display="none"
-                console.log("currentGameState = " + currentGameState);
+                // console.log("currentGameState = " + currentGameState);
                 break;
 
             case gameState.endGame:
 
                 // Affichage de la page home
                 endgamePopUp.style.display="flex";
-                console.log("currentGameState = " + currentGameState);
+                // console.log("currentGameState = " + currentGameState);
                 break;
         }
     }
@@ -343,12 +345,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
             showScoringIndicator();
 
-            console.log("it's a match en game")
+            // console.log("it's a match en game")
         }
         if (currentGameState == gameState.home){
             modelGenerator();
             ThemeSelector();
-            console.log("it's a match en home")
+            // console.log("it's a match en home")
         }
     }
 
@@ -367,7 +369,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     function showScoringIndicator() {
         scoringIndicator.style.opacity = 0;
-        console.log("opacity avant", scoringIndicator.style.opacity)
+        // console.log("opacity avant", scoringIndicator.style.opacity)
         scoringIndicator.textContent = '+1';
         scoringIndicator.classList.add('scoring-animation');
         scoreContainer.classList.add('score-container-animation');
@@ -376,7 +378,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             scoringIndicator.classList.remove('scoring-animation');
             scoringIndicator.style.opacity = 1;
             scoringIndicator.textContent = '';
-            console.log("opacity après", scoringIndicator.style.opacity);
+            // console.log("opacity après", scoringIndicator.style.opacity);
             scoreContainer.classList.remove('score-container-animation');
         }, 500);
     }
@@ -478,7 +480,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         handleMouseMouvement(e, fontTarget);
     });
 
-    console.log(mouseControl)
+    // console.log(mouseControl)
     // Appel initial de handleGameState
     handleGameState();
 });  
