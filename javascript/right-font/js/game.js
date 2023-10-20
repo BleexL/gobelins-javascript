@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         game : "game",
         endGame : "endGame",
     };
-    
+
     let currentGameState = gameState.home;
 
     const homeContainer = document.getElementsByClassName("home-container")[0];
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     const gameDescription = document.getElementsByClassName("game-description")[0];
 
-    let countdown = 5;
+    let countdown = 60;
     let timeRemaining = countdown;
     let gaugeRemaining = 100;
     let timerGauge = document.querySelector('.timer-gauge');
@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     function gameInit (){
         mouseControl = true;
-        countdown = 5;
+        countdown = 60;
         timeRemaining = countdown;
         score = 0;
 
