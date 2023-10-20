@@ -36,8 +36,10 @@ body{
     font-family: Nunito Sans;
     font-size: 24px;
     font-style: normal;
-    font-weight: 700;
     line-height: normal;
+    font-variation-settings: 'wdth' 100, 'wght' 700;
+
+    transition: all 300ms ease-in-out;
 }
 
 .cta-primary{
@@ -69,19 +71,41 @@ body{
     border-radius: 4px;   
 }
 
+@keyframes pulse-animation {
+	0% {
+		animation-timing-function: ease-out;
+		transform: scale(1);
+		transform-origin: center center;
+	}
+
+	10% {
+		animation-timing-function: ease-in;
+		transform: scale(0.91);
+	}
+
+	17% {
+		animation-timing-function: ease-out;
+		transform: scale(0.98);
+	}
+
+	33% {
+		animation-timing-function: ease-in;
+		transform: scale(0.87);
+	}
+
+	45% {
+		animation-timing-function: ease-out;
+		transform: scale(1);
+	}
+}
+
+.score-container-animation{
+    animation: pulse-animation 1.5s linear 0s 1 normal none;
+}
+
 .score-value{
     margin: 0;
 }
-
-/* #scoring-indicator-container{
-    display: flex;
-    width: 240px;
-    height: 240px;
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-} */
 
 #scoring-indicator{
     color: #0C4A6E;
@@ -133,16 +157,18 @@ body{
 
 .game-description{
     font-size: 20px;
+    width: 80%;
+    text-align: center;
 }
 
 .font-mouse{
-    font-size: 10em;
+    font-size: 9em;
     margin: 0;
     position: absolute;
 }
 
 .font-model{
-    font-size: 10em;
+    font-size: 9em;
     position: absolute;
     color: #BDBDBD;
     z-index: -1;
@@ -175,9 +201,9 @@ body{
     background: #FFF;
     position: absolute;
     bottom: 20vh;
-    width: 50%;
-    max-width: 640px;
-    opacity: 1;
+    width: 640px;
+    /* max-width: 640px; */
+    opacity: 0;
 
     overflow: hidden;
     /* transform: translateY(-50%); */
@@ -189,6 +215,7 @@ body{
     opacity: 1;
     bottom: 50vh;
     transform: translateY(50%);
+    transition: all 500ms;
 
 }
 
@@ -234,4 +261,31 @@ body{
     flex: 1;
     min-width: 200px;
     padding: 0px;
+}
+
+.cta:hover{
+    font-variation-settings: 'wdth' 110, 'wght' 800;
+}
+
+/* Styles pour les écrans dont la largeur est inférieure à 768px */
+@media (max-width: 1064px) {
+    .font-mouse {
+        font-size: 7em;
+    }
+    .font-model {
+        font-size: 7em;
+    }
+    .pop-up-container{
+        width: 480px;
+    }
+}
+
+/* Styles pour les écrans dont la largeur est inférieure à 480px */
+@media (max-width: 768px) {
+    .font-mouse {
+        font-size: 5em; 
+    }
+    .font-model {
+        font-size: 5em; 
+    }
 }

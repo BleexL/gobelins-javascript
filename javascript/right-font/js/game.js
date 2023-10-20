@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         game : "game",
         endGame : "endGame",
     };
+    
     let currentGameState = gameState.home;
 
     const homeContainer = document.getElementsByClassName("home-container")[0];
@@ -35,7 +36,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     const gameDescription = document.getElementsByClassName("game-description")[0];
 
-    let countdown = 60;
+    let countdown = 5;
     let timeRemaining = countdown;
     let gaugeRemaining = 100;
     let timerGauge = document.querySelector('.timer-gauge');
@@ -180,8 +181,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
         document.getElementById("previous-score").style.color = colorTheme[newRandomIndexTheme].darkerColor;
         document.getElementById("record").style.color = colorTheme[newRandomIndexTheme].primaryColor;
         
-        document.getElementById("score").style.color = colorTheme[newRandomIndexTheme].primaryColor;
-        scoreContainer.style.backgroundColor = colorTheme[newRandomIndexTheme].darkerColor;
+        document.getElementById("score").style.color = colorTheme[newRandomIndexTheme].darkerColor;
+        scoreContainer.style.backgroundColor = colorTheme[newRandomIndexTheme].primaryColor;
 
         scoringIndicator.style.color = colorTheme[newRandomIndexTheme].darkerColor;
 
@@ -242,7 +243,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     function gameInit (){
         mouseControl = true;
-        countdown = 60;
+        countdown = 5;
         timeRemaining = countdown;
         score = 0;
 
@@ -329,23 +330,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
         console.log("opacity avant", scoringIndicator.style.opacity)
         scoringIndicator.textContent = '+1';
         scoringIndicator.classList.add('scoring-animation');
+        scoreContainer.classList.add('score-container-animation');
     
         setTimeout(function () {
             scoringIndicator.classList.remove('scoring-animation');
             scoringIndicator.style.opacity = 1;
             scoringIndicator.textContent = '';
-            console.log("opacity après", scoringIndicator.style.opacity)
+            console.log("opacity après", scoringIndicator.style.opacity);
+            scoreContainer.classList.remove('score-container-animation');
         }, 500);
     }
 
     function showPopUpEndgame(){
-        endgamePopUp.style.opacity = 1;
-        endgamePopUp.classList.add('pop-up-animation');
+        // endgamePopUp.style.opacity = 1;
+        setTimeout(function () {
+            endgamePopUp.classList.add('pop-up-animation');
+
+        }, 100)
     }
 
     function hidePopUpEndgame(){
         endgamePopUp.classList.remove('pop-up-animation');
-        endgamePopUp.style.opacity = 0;
+        // endgamePopUp.style.opacity = 0;
     }
     
     // Fonction de gestion de l'état du jeu
