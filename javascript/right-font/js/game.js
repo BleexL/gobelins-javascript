@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     // Partie 3 : application des variations aux font
     function setFontVariation (fontMouseWeight, fontMouseWidth, fontTarget){
-        fontTarget.style.fontVariationSettings = `"wght" ${fontMouseWeight}, "wdth" ${fontMouseWidth}`;
+        fontTarget.style.fontVariationSettings =`"wght" ${fontMouseWeight}, "wdth" ${fontMouseWidth}`;
         // console.log(fontTarget, fontMouseWeight, fontMouseWidth);
     }
 
